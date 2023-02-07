@@ -1,9 +1,36 @@
 package org.example.library.models;
 
+import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
+@Entity
+@Table(name = "book")
 public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+
+    @Column(name = "title")
+    @NotEmpty(message = "Title should not be empty")
+    @NotNull(message = "Title should not be empty")
+    private String title;
+
+    @Column()
+    @NotEmpty(message = "Author should not be empty")
+    @NotNull(message = "Author should not be empty")
+    private String author;
+    @Column(name = "year")
+    @Min(value = 1500, message = "Year should be greater than 1500")
+    private int year;
+    @ManyToOne()
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person owner;
+
+    public Book() {
+    }
 
     public int getId() {
         return id;
@@ -13,17 +40,8 @@ public class Book {
         this.id = id;
     }
 
-    @NotEmpty(message = "Book title should not be empty")
-    private String title;
-    @NotEmpty(message = "Book author should not be empty")
-    private String author;
-    private int year;
-
     public String getTitle() {
         return title;
-    }
-
-    public Book() {
     }
 
     public void setTitle(String title) {
@@ -46,9 +64,11 @@ public class Book {
         this.year = year;
     }
 
-    public Book(String title, String author, int year) {
-        this.title = title;
-        this.author = author;
-        this.year = year;
+    public Person getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
     }
 }

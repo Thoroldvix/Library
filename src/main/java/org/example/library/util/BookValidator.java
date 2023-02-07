@@ -1,7 +1,7 @@
 package org.example.library.util;
 
-import org.example.library.dao.BookDao;
 import org.example.library.models.Book;
+import org.example.library.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -10,11 +10,11 @@ import org.springframework.validation.Validator;
 @Component
 public class BookValidator implements Validator {
 
-    private final BookDao bookDao;
+    private final BookService bookService;
 
     @Autowired
-    public BookValidator(BookDao bookDao) {
-        this.bookDao = bookDao;
+    public BookValidator(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class BookValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Book book = (Book) target;
 
-        if (bookDao.checkIfTitleExists(book.getTitle()).isPresent()) {
+        if (bookService.checkIfTitleExists(book.getTitle())) {
             errors.rejectValue("title","", "Book with this title already exists");
         }
     }

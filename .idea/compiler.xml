@@ -9,5 +9,9 @@
         <module name="Library" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="library" target="1.8" />
+      <module name="spring-data-jpa-crud-app" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

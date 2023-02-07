@@ -1,18 +1,29 @@
 package org.example.library.models;
 
-
+import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
-import java.util.Objects;
 
+@Entity
+@Table(name = "Person")
 public class Person {
 
-    @Pattern(regexp = "[A-Z]\\w+, [A-Z]\\w+, [A-Z]\\w+", message = "Your name should be in this format: First Name, Middle Name, Last Name")
-    private String name;
-    @Min(1901)
-    private int yearOfBirth;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotEmpty
+    @Column(name = "name")
+    private String name;
+    @Column(name = "year_of_birth")
+    @Min(value = 1900)
+    private int yearOfBirth;
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    private List<Book> books;
+
+    public Person() {
+    }
 
     public int getId() {
         return id;
@@ -20,13 +31,6 @@ public class Person {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Person() {
-    }
-    public Person(String name, int yearOfBirth) {
-        this.name = name;
-        this.yearOfBirth = yearOfBirth;
     }
 
     public String getName() {
@@ -44,4 +48,13 @@ public class Person {
     public void setYearOfBirth(int yearOfBirth) {
         this.yearOfBirth = yearOfBirth;
     }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
 }
