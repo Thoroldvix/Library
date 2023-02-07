@@ -19,7 +19,7 @@ public class Person {
     @Column(name = "year_of_birth")
     @Min(value = 1900)
     private int yearOfBirth;
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner")
     private List<Book> books;
 
     public Person() {

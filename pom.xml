@@ -114,6 +114,8 @@
 
 
     <build>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+
         <finalName>Library</finalName>
         <plugins>
             <plugin>

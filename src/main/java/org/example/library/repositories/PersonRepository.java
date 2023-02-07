@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface PersonRepository extends JpaRepository<Person, Integer> {
     boolean existsByName(String name);
 
-    Person findById(int id);
+
 
 
 }

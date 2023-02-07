@@ -42,15 +42,15 @@ public class PeopleController {
     public String create(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
         personValidator.validate(person, bindingResult);
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors())
             return "people/new";
-        }
+
         personService.save(person);
         return "redirect:/people";
     }
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("books", personService.getBooks(id));
+        model.addAttribute("books", personService.getBooksByPersonId(id));
         model.addAttribute("person", personService.show(id));
         return "people/show";
     }
@@ -66,9 +66,9 @@ public class PeopleController {
     public String update(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult, @PathVariable("id") int id) {
         personValidator.validate(person, bindingResult);
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors())
             return "people/edit";
-        }
+
         personService.update(id, person);
         return "redirect:/people";
     }

@@ -10,6 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,15 +32,26 @@ public class BookService {
     }
 
     public Book show(int id) {
-        return bookRepository.findById(id);
+        Optional<Book> book = bookRepository.findById(id);
+        return book.orElse(null);
     }
 
     @Transactional
     public void save(Book book) {
+        book.setRentTime(new Date());
         bookRepository.save(book);
     }
 
-    public List<Book> index() {
+    public List<Book> index(Optional<Integer> pages, Optional<Integer> booksPerPage, boolean sortByYear) {
+        if (pages.isPresent() && booksPerPage.isPresent() && sortByYear) {
+            return getSortedPages(pages.get(), booksPerPage.get());
+        }
+        else if (pages.isPresent() && booksPerPage.isPresent()) {
+            return getPages(pages.get(), booksPerPage.get());
+        }
+        else if (sortByYear) {
+            return bookRepository.findAll(Sort.by( "year"));
+        }
         return bookRepository.findAll();
     }
 
@@ -51,22 +64,28 @@ public class BookService {
     }
 
     public Optional<Person> getBookOwner(int id) {
-        return Optional.ofNullable(bookRepository.findById(id).getOwner());
-
+        Optional<Book> book = bookRepository.findById(id);
+        return book.map(Book::getOwner);
     }
 
     @Transactional
     public void assign(int id, Person selectedPerson) {
-        Book book = bookRepository.findById(id);
-        book.setOwner(selectedPerson);
-        bookRepository.save(book);
+        Optional<Book> book = bookRepository.findById(id);
+        if (book.isPresent()) {
+            book.get().setOwner(selectedPerson);
+            book.get().setRentTime(new Date());
+            bookRepository.save(book.get());
+        }
     }
 
     @Transactional
     public void release(int id) {
-        Book book = bookRepository.findById(id);
-        book.setOwner(null);
-        bookRepository.save(book);
+        Optional<Book> book = bookRepository.findById(id);
+        if (book.isPresent()) {
+            book.get().setOwner(null);
+            book.get().setRentTime(null);
+            bookRepository.save(book.get());
+        }
     }
 
     @Transactional
@@ -83,5 +102,12 @@ public class BookService {
 
     public boolean checkIfTitleExists(String title) {
         return bookRepository.existsByTitle(title);
+    }
+
+    public List<Book> search(Optional<String> searchQuery) {
+        if (searchQuery.isPresent()) {
+            return bookRepository.findBooksByTitleLike(searchQuery.get());
+        }
+        return Collections.emptyList();
     }
 }

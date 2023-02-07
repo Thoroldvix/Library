@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book search</title>
+</head>
+<body>
+<form th:method="get" th:action="@{books/search/${query}">
+    <label for="search-input">Enter search query: </label>
+        <input type="text" name="query" id="search-input">
+    <br/>
+    <label>
+        <input type="submit" value="Search">
+    </label>
+    <div th:each="book : ${books}">
+        <p th:text="${book.getTitle()}"></p>
+    </div>
+</form>
+
+</body>
+</html>
