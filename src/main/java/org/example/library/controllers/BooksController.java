@@ -48,7 +48,9 @@ public class BooksController {
 
     @GetMapping("/search")
     public String search(@RequestParam(required = false) Optional<String> query, Model model) {
-        model.addAttribute("books", bookService.search(query));
+        if (query.isPresent() && !query.get().isEmpty()) {
+            model.addAttribute("books", bookService.search(query));
+        }
         return "books/search";
     }
 

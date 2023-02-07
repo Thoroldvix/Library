@@ -105,9 +105,6 @@ public class BookService {
     }
 
     public List<Book> search(Optional<String> searchQuery) {
-        if (searchQuery.isPresent()) {
-            return bookRepository.findBooksByTitleLike(searchQuery.get());
-        }
-        return Collections.emptyList();
+        return searchQuery.map(bookRepository::searchByQuery).orElse(null);
     }
 }

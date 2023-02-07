@@ -5,16 +5,27 @@
     <title>Book search</title>
 </head>
 <body>
-<form th:method="get" th:action="@{books/search/${query}">
+<form >
     <label for="search-input">Enter search query: </label>
         <input type="text" name="query" id="search-input">
     <br/>
     <label>
         <input type="submit" value="Search">
     </label>
-    <div th:each="book : ${books}">
-        <p th:text="${book.getTitle()}"></p>
+    <div th:if="!${#lists.isEmpty(books)}" th:each="book : ${books}">
+        <p th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}"></p>
+        <div th:if="${book.getOwner()}">
+            <span>Person currently renting book: </span> <span th:text="${book.getOwner().getName()}">Person name</span>
+            <hr/>
+        </div>
+        <div th:unless="${book.getOwner()}">
+            <span>No one renting this book</span>
+            <hr/>
+        </div>
     </div>
+    <div th:unless="!${#lists.isEmpty(books)}">Book not found</div>
+
+
 </form>
 
 </body>
